@@ -1,6 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2019-12-24 14:46:34
+ * @LastEditTime: 2019-12-24 14:59:06
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /cloud-music/src/index.js
+ */
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
