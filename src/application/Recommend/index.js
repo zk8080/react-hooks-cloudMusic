@@ -1,23 +1,36 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:18:49
- * @LastEditTime : 2019-12-24 16:45:44
+ * @LastEditTime : 2019-12-25 10:18:26
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Recommend/index.js
  */
 import React from 'react';
-import Slider from '../../components/slider/index';
+import Slider from '../../components/slider';
+import RecommendList from '../../components/list';
 
 function Recommend(props) {
 
+    // 轮播图mock数据
     const bannerList = [1, 2, 3, 4].map(item => {
         return { imageUrl: "http://p1.music.126.net/ZYLJ2oZn74yUz5x8NBGkVA==/109951164331219056.jpg" }
+    })
+
+    // 推荐列表mock数据
+    const recommendList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+        return {
+            id: 1 + index,
+            picUrl: "https://p1.music.126.net/fhmefjUfMD-8qtj3JKeHbA==/18999560928537533.jpg",
+            playCount: 17171122,
+            name: "朴树、许巍、李健、郑钧、老狼、赵雷"
+        }
     })
 
     return (
         <div>
             <Slider bannerList={bannerList}></Slider>
+            <RecommendList recommendList={recommendList}></RecommendList>
         </div>
     )
 }
