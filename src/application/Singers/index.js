@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:08
- * @LastEditTime : 2019-12-28 21:28:12
+ * @LastEditTime : 2019-12-28 21:59:12
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/index.js
@@ -46,7 +46,7 @@ function Singers(props) {
                 {
                     list.map((item, index) => {
                         return (
-                            <ListItem>
+                            <ListItem key={item.id}>
                                 <div className="img_wrapper">
                                     <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music"/>
                                 </div>
