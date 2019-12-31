@@ -1,22 +1,36 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 11:11:01
- * @LastEditTime : 2019-12-25 17:14:05
+ * @LastEditTime : 2019-12-31 17:14:28
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/baseUI/scroll/index.js
  */
-import React, {useEffect, useState, useRef, useImperativeHandle, forwardRef, memo} from 'react';
+import React, {useEffect, useState, useRef, useImperativeHandle, forwardRef, memo, useMemo} from 'react';
 import PropTypes from 'prop-types';
 import BScroll from 'better-scroll';
-import {ScrollContainer} from './style';
+import {ScrollContainer, PullDownLoading, PullUpLoading} from './style';
+import Loading from  '../loading';
+import LoadingV2 from '../loading-v2';
+import _ from 'lodash';
 
 const Scroll = forwardRef((props, ref) => {
     const [bScroll, setBScroll] = useState();
 
-    const { children, direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom, pullUp, pullDown, onScroll} = props;
+    const { children, direction, click, refresh, pullUpLoading, pullDownLoading, bounceTop, bounceBottom} = props;
     
+    const {pullUp, pullDown, onScroll} = props;
+
     const scrollContainerRef = useRef();
+
+    const debouncePullUp = useMemo(() => {
+        console.log( pullUp, '--pullUp--' )
+        return _.debounce(pullUp, 300)
+    }, [pullUp]);
+
+    const debouncePullDown = useMemo(() => {
+        return _.debounce(pullDown, 300)
+    }, [pullDown]);
 
     // 创建better-scroll实例， 只创建一次
     useEffect(() => {
@@ -35,7 +49,7 @@ const Scroll = forwardRef((props, ref) => {
             // 卸载的时候 清除scroll实例
             setBScroll(null);
         }
-    }, []);
+    }, [bounceBottom, bounceTop, click, direction]);
 
     // 每次重新渲染的时候 调用实例刷新方法，防止无法滚动
     useEffect(() => {
@@ -61,29 +75,29 @@ const Scroll = forwardRef((props, ref) => {
         bScroll.on('scrollEnd', () => {
             // 判断是否滑动到了底部
             if(bScroll.y <= bScroll.maxScrollY + 100){
-                pullUp()
+                debouncePullUp()
             }
         })
         return () => {
             bScroll.off('scrollEnd')
         }
 
-    }, [pullUp, bScroll])
+    }, [pullUp, bScroll, debouncePullUp])
 
     // 判断下拉操作，进行下拉刷新的函数调用
     useEffect(() => {
         if(!pullDown || !bScroll) return;
         bScroll.on('touchEnd', (pos) => {
             // 判断下拉
-            if(pos.y > 50){
-                pullDown()
+            if(pos.y > 30){
+                debouncePullDown()
             }
         })
         return () => {
             bScroll.off('touchEnd')
         }
 
-    }, [pullDown, bScroll])
+    }, [pullDown, bScroll, debouncePullDown])
 
     /**
      * 暴露组件内部方法 供外届进行调用 
@@ -105,9 +119,18 @@ const Scroll = forwardRef((props, ref) => {
         }
     }))
 
+    const PullUpdisplayStyle = pullUpLoading ? {display: ""} : { display:"none" };
+    const PullDowndisplayStyle = pullDownLoading ? { display: ""} : { display:"none" };
+    
     return (
         <ScrollContainer ref={scrollContainerRef}>
             {children}
+            <PullUpLoading  style={PullUpdisplayStyle}>
+                <Loading></Loading>
+            </PullUpLoading>
+            <PullDownLoading  style={PullDowndisplayStyle}>
+                <LoadingV2></LoadingV2>
+            </PullDownLoading>
         </ScrollContainer>
     );
 });
@@ -116,11 +139,11 @@ Scroll.defaultProps = {
     direction: "vertical",
     click: true,
     refresh: true,
-    onScroll:null,
+    onScroll: () => {},
     pullUpLoading: false,
     pullDownLoading: false,
-    pullUp: null,
-    pullDown: null,
+    pullUp: ()  => {},
+    pullDown: ()  => {},
     bounceTop: true,
     bounceBottom: true
 };

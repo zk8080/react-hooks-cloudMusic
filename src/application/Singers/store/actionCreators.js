@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-28 20:11:33
- * @LastEditTime : 2019-12-28 21:26:51
+ * @LastEditTime : 2019-12-31 16:31:21
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/store/actionCreators.js
@@ -12,6 +12,7 @@ import {
 } from '../../../api/request';
 import * as actionTypes from './constants';
 import { fromJS } from 'immutable';
+import _ from 'lodash';
 
 export const changeSingerList = (data) => ({
     type: actionTypes.CHANGE_SINGER_LIST,
@@ -58,9 +59,9 @@ export const refreshMoreHotSingerList = () => {
         const pageCount = getState().getIn(['singers', 'pageCount']);
         const singerList = getState().getIn(['singers', 'singerList']).toJS();
         getHotSingerListRequest(pageCount).then(res => {
-            const data  = [...singerList, ...res.artists];
+            const data  = _.uniqBy([...singerList, ...res.artists], 'id');
             dispatch(changeSingerList(data));
-            dispatch(changePullDownLoading(false));
+            dispatch(changePullUpLoading(false));
         }).catch(err => {
             console.log(err);
         })
@@ -87,9 +88,9 @@ export const refreshMoreSingerList =  (category, alpha) => {
         const pageCount = getState().getIn(['singers', 'pageCount']);
         const singerList = getState().getIn(['singers', 'singerList']).toJS();
         getSingerListRequest(category, alpha, pageCount).then(res => {
-            const data  = [...singerList, ...res.artists];
+            const data  = _.uniqBy([...singerList, ...res.artists], 'id');
             dispatch(changeSingerList(data));
-            dispatch(changePullDownLoading(false));
+            dispatch(changePullUpLoading(false));
         }).catch(err => {
             console.log(err);
         })

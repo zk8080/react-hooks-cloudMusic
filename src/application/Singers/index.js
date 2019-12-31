@@ -1,13 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:08
- * @LastEditTime : 2019-12-28 21:59:12
+ * @LastEditTime : 2019-12-31 16:38:03
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/index.js
  */
 import React, {useEffect, useState} from 'react';
 import { connect } from 'react-redux';
+import LazyLoad, {forceCheck} from 'react-lazyload';
 import * as actionCreators from './store/actionCreators';
 import Horizen from '../../baseUI/horizen-item';
 import { categoryTypes, alphaTypes } from '../../api/config';
@@ -28,15 +29,23 @@ function Singers(props) {
     // eslint-disable-next-line
     }, []);
     
-    let handleUpdateAlpha = (val) => {
+    const handleUpdateAlpha = (val) => {
         setAlpha(val);
         updateDispatch(category, val);
     }
 
-    let handleUpdateCatetory = (val) => {
+    const handleUpdateCatetory = (val) => {
         setCategory(val);
         updateDispatch(val, alpha);
     }
+
+    const handlePullUp = () => {
+        pullUpRefreshDispatch (category, alpha, category === '', pageCount);
+    };
+    
+    const handlePullDown = () => {
+        pullDownRefreshDispatch (category, alpha);
+    };
 
     const renderSingerList = () => {
         const {singerList} = props;
@@ -48,7 +57,9 @@ function Singers(props) {
                         return (
                             <ListItem key={item.id}>
                                 <div className="img_wrapper">
-                                    <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music"/>
+                                    <LazyLoad placeholder={<img width="100%" height="100%" src={require ('./singer.png')} alt="singer"/>}>
+                                        <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music"/>
+                                    </LazyLoad>
                                 </div>
                                 <span className="name">{item.name}</span>
                             </ListItem>
@@ -74,7 +85,13 @@ function Singers(props) {
                 handClick={val => handleUpdateAlpha(val)}
             ></Horizen>
             <ListContainer>
-                <Scroll>
+                <Scroll
+                    pullUp={handlePullUp}
+                    pullDown={handlePullDown}
+                    pullUpLoading={pullUpLoading}
+                    pullDownLoading={pullDownLoading}
+                    onScroll={forceCheck}
+                >
                     {renderSingerList()}
                 </Scroll>
             </ListContainer>
