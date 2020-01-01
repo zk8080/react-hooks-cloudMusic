@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:08
- * @LastEditTime : 2019-12-31 16:38:03
+ * @LastEditTime : 2019-12-31 17:21:57
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/index.js
@@ -18,14 +18,16 @@ import Loading from '../../baseUI/loading';
 
 function Singers(props) {
 
-    const { enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
+    const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
     const { getHotSingerDispatch, updateDispatch, pullUpRefreshDispatch, pullDownRefreshDispatch } = props;
 
     const [ category, setCategory ] = useState('');
     const [ alpha, setAlpha ] = useState('');
 
     useEffect(() => {
-        getHotSingerDispatch();
+        if( !singerList.size ){
+            getHotSingerDispatch();
+        }
     // eslint-disable-next-line
     }, []);
     
@@ -48,7 +50,6 @@ function Singers(props) {
     };
 
     const renderSingerList = () => {
-        const {singerList} = props;
         const list = singerList ? singerList.toJS() : [];
         return (
             <List>

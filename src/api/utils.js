@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 10:14:34
- * @LastEditTime: 2019-12-25 10:14:46
- * @LastEditors: your name
+ * @LastEditTime : 2020-01-01 21:29:22
+ * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/utils.js
  */
@@ -16,3 +16,11 @@ export const getCount = (count) => {
     return Math.floor (count / 10000000)/ 10 + "亿";
   }
 }
+
+export const filterIndex = rankList => {
+    for (let i = 0; i < rankList.length - 1; i++) {
+        if (rankList[i].tracks.length && !rankList[i + 1].tracks.length) {
+        return i + 1;
+        }
+    }
+};

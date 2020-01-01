@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 18:05:18
- * @LastEditTime : 2019-12-28 20:43:36
+ * @LastEditTime : 2020-01-01 21:00:33
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/request.js
@@ -22,4 +22,8 @@ export const getHotSingerListRequest = (count) => {
 
 export const getSingerListRequest= (category, alpha, count) => {
     return axiosInstance.get(`/artist/list?cat=${category}&initial=${alpha.toLowerCase()}&offset=${count}`);
+}
+
+export const getRankListRequest = () => {
+    return axiosInstance.get(`/toplist/detail`);
 }

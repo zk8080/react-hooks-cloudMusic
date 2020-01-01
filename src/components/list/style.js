@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 10:01:46
- * @LastEditTime : 2019-12-25 10:07:59
+ * @LastEditTime : 2020-01-01 22:11:52
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/components/list/style.js
@@ -39,7 +39,7 @@ export const ListItem = styled.div`
       width: 100%;
       height: 35px;
       border-radius: 3px;
-      background: linear-gradient (hsla (0,0%,43%,.4),hsla (0,0%,100%,0));
+      background: linear-gradient(hsla(0,0%,43%,.4),hsla(0,0%,100%,0));
     }
     position: relative;
     height: 0;

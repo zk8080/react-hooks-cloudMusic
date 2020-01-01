@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:18:49
- * @LastEditTime : 2019-12-26 21:51:40
+ * @LastEditTime : 2020-01-01 21:17:33
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Recommend/index.js
@@ -17,7 +17,6 @@ import Loading from '../../baseUI/loading';
 import { Content } from './style';
 
 function Recommend(props) {
-    console.log( props, '---props---' )
 
     const { bannerList, recommendList, enterLoading } = props;
 

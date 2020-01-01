@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 11:11:01
- * @LastEditTime : 2019-12-31 17:14:28
+ * @LastEditTime : 2020-01-01 22:09:36
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/baseUI/scroll/index.js
@@ -24,7 +24,6 @@ const Scroll = forwardRef((props, ref) => {
     const scrollContainerRef = useRef();
 
     const debouncePullUp = useMemo(() => {
-        console.log( pullUp, '--pullUp--' )
         return _.debounce(pullUp, 300)
     }, [pullUp]);
 
