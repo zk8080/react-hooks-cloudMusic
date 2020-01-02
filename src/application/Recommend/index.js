@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:18:49
- * @LastEditTime : 2020-01-01 21:17:33
+ * @LastEditTime : 2020-01-02 22:09:21
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Recommend/index.js
@@ -15,6 +15,7 @@ import RecommendList from '../../components/list';
 import Scroll from '../../baseUI/scroll';
 import Loading from '../../baseUI/loading';
 import { Content } from './style';
+import { renderRoutes } from  'react-router-config';
 
 function Recommend(props) {
 
@@ -37,7 +38,6 @@ function Recommend(props) {
 
     const bannerListJS = bannerList ? bannerList.toJS() : [];
     const recommendListJS = recommendList ? recommendList.toJS() : [];
-
     return (
         <Content>
             <Scroll className="list" onScroll={forceCheck}>
@@ -47,6 +47,7 @@ function Recommend(props) {
                 </div>
             </Scroll>
             { enterLoading && <Loading></Loading>}
+            {renderRoutes(props.route.routes)}
         </Content>
     )
 }

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:14:36
- * @LastEditTime : 2019-12-24 15:29:48
+ * @LastEditTime : 2020-01-02 22:09:45
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/routes/index.js
@@ -12,6 +12,7 @@ import Home from '../application/Home';
 import Recommend from '../application/Recommend';
 import Singers from '../application/Singers';
 import Rank from '../application/Rank';
+import Album from  '../application/Album';
 
 export default [
     {
@@ -25,7 +26,13 @@ export default [
             },
             {
                 path: '/recommend',
-                component: Recommend
+                component: Recommend,
+                routes: [
+                    {
+                        path: '/recommend/:id',
+                        component: Album
+                    }
+                ]
             },
             {
                 path: '/rank',

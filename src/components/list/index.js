@@ -1,18 +1,24 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 10:01:40
- * @LastEditTime : 2019-12-26 21:34:34
+ * @LastEditTime : 2020-01-02 21:57:09
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/components/list/index.js
  */
 import React, {memo} from 'react';
 import LazyLoad from 'react-lazyload';
+import { withRouter } from  'react-router-dom';
 import { ListWrap, List, ListItem } from './style';
 import { getCount } from '../../api/utils';
 
 function RecommendList(props) {
     const { recommendList } = props;
+
+    const enterDetail = (id) => {
+        props.history.push(`/recommend/${id}`)
+    }
+
     return (
         <ListWrap>
             <h1 className='title'>推荐歌单</h1>
@@ -20,7 +26,7 @@ function RecommendList(props) {
                 {
                     recommendList.map((item, index) => {
                         return (
-                            <ListItem key={item.id}>
+                            <ListItem key={item.id} onClick={() => {enterDetail(item.id)}}>
                                 <div className="img_wrapper">
                                     <div className="decorate"></div>
                                     <LazyLoad
@@ -43,4 +49,4 @@ function RecommendList(props) {
     )
 }
 
-export default memo(RecommendList);
+export default memo(withRouter(RecommendList));
