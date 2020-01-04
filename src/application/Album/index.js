@@ -1,18 +1,20 @@
 /*
  * @Author: your name
  * @Date: 2020-01-02 21:58:17
- * @LastEditTime : 2020-01-04 15:59:50
+ * @LastEditTime : 2020-01-04 17:56:54
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Album/index.js
  */
-import React, { memo, useState, useCallback, useRef } from 'react';
+import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
 import { Container, TopDesc, Menu, SongList, SongItem } from './style';
 import { CSSTransition } from 'react-transition-group';
+import {connect} from 'react-redux';
 import Header from '../../baseUI/header/index';
 import Scroll from '../../baseUI/scroll';
-import { getCount, getName } from '../../api/utils';
+import { getCount, getName, isEmptyObject } from '../../api/utils';
 import style from '../../assets/global-style';
+import { actionCreators } from './store/index';
 
 export const HEADER_HEIGHT = 45;
 
@@ -26,110 +28,17 @@ function Album(props) {
 
     const headerRef = useRef();
 
-    //mock 数据
-    const currentAlbum = {
-        creator: {
-            avatarUrl: "http://p1.music.126.net/O9zV6jeawR43pfiK2JaVSw==/109951164232128905.jpg",
-            nickname: "浪里推舟"
-        },
-        coverImgUrl: "http://p2.music.126.net/ecpXnH13-0QWpWQmqlR0gw==/109951164354856816.jpg",
-        subscribedCount: 2010711,
-        name: "听完就睡，耳机是天黑以后柔软的梦境",
-        tracks:[
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-            {
-                name: "我真的受伤了",
-                ar: [{name: "张学友"}, {name: "周华健"}],
-                al: {
-                    name: "学友 热"
-                }
-            },
-        ]
-    }
+    // 从路由中拿到歌单的 id
+    const id = props.match.params.id;
 
+    const { currentAlbum: currentAlbumImmutable, enterLoading } = props;
+    const { getAlbumDataDispatch } = props;
+
+    useEffect(() => {
+        getAlbumDataDispatch(id);
+    }, [getAlbumDataDispatch, id])
+
+    let currentAlbum = currentAlbumImmutable ? currentAlbumImmutable.toJS () : {};
     const handleBack = useCallback(() => {
         setShowStatus(false);
     }, []);
@@ -202,6 +111,40 @@ function Album(props) {
         }
     }
 
+    const renderSongList = () => {
+        return (
+          <SongList>
+            <div className="first_line">
+              <div className="play_all">
+                <i className="iconfont">&#xe6e3;</i>
+                <span>播放全部 <span className="sum">(共{currentAlbum.tracks.length}首)</span></span>
+              </div>
+              <div className="add_list">
+                <i className="iconfont">&#xe62d;</i>
+                <span>收藏({getCount(currentAlbum.subscribedCount)})</span>
+              </div>
+            </div>
+            <SongItem>
+              {
+                currentAlbum.tracks.map((item, index) => {
+                  return (
+                    <li key={index}>
+                      <span className="index">{index + 1}</span>
+                      <div className="info">
+                        <span>{item.name}</span>
+                        <span>
+                          {getName(item.ar)} - {item.al.name}
+                        </span>
+                      </div>
+                    </li>
+                  )
+                })
+              }
+            </SongItem>
+          </SongList>
+        )
+    }
+
     return (
         <CSSTransition
             in={showStatus}  
@@ -218,48 +161,38 @@ function Album(props) {
                     ref={headerRef} 
                     isMarquee={isMarquee}
                 ></Header>
-                <Scroll bounceTop={false} onScroll={handleScroll}>
-                    <div>
-                        {
-                            renderTopDesc()
-                        }
-                        {
-                            renderMenu()
-                        }
-                        <SongList>
-                            <div className="first_line">
-                                <div className="play_all">
-                                <i className="iconfont">&#xe6e3;</i>
-                                <span > 播放全部 <span className="sum">(共 {currentAlbum.tracks.length} 首)</span></span>
-                                </div>
-                                <div className="add_list">
-                                <i className="iconfont">&#xe62d;</i>
-                                <span > 收藏 ({getCount(currentAlbum.subscribedCount)})</span>
-                                </div>
-                            </div>
-                            <SongItem>
-                                {
-                                currentAlbum.tracks.map ((item, index) => {
-                                    return (
-                                    <li key={index}>
-                                        <span className="index">{index + 1}</span>
-                                        <div className="info">
-                                        <span>{item.name}</span>
-                                        <span>
-                                            { getName(item.ar) } - { item.al.name }
-                                        </span>
-                                        </div>
-                                    </li>
-                                    )
-                                })
-                                }
-                            </SongItem>
-                        </SongList>
-                    </div>  
-                </Scroll>
+                {!isEmptyObject(currentAlbum) ?
+                    (
+                        <Scroll
+                        bounceTop={false}
+                        onScroll={handleScroll}
+                        >
+                        <div>
+                            { renderTopDesc() }
+                            { renderMenu() }
+                            { renderSongList() }
+                        </div>
+                        </Scroll>
+                    )
+                    : null
+                }
             </Container>
         </CSSTransition>
     )
 }
 
-export default memo(Album)
+const mapStateToProps = (state) => ({
+    currentAlbum: state.getIn(['album', 'currentAlbum']),
+    enterLoading: state.getIn(['album', 'enterLoading']),
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getAlbumDataDispatch (id) {
+            dispatch(actionCreators.changeEnterLoading(true));
+            dispatch(actionCreators.getAlbumDetail(id));
+        },
+    }
+}
+
+export default  connect(mapStateToProps, mapDispatchToProps)(memo(Album));

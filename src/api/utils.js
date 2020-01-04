@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 10:14:34
- * @LastEditTime : 2020-01-04 15:34:20
+ * @LastEditTime : 2020-01-04 17:55:58
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/utils.js
@@ -33,3 +33,6 @@ export const getName = list => {
     });
     return str;
 };
+
+//判断一个对象是否为空
+export const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
