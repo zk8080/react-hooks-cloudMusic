@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:08
- * @LastEditTime : 2019-12-31 17:21:57
+ * @LastEditTime : 2020-01-06 17:44:47
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/index.js
@@ -15,7 +15,8 @@ import { categoryTypes, alphaTypes } from '../../api/config';
 import { NavContainer, List, ListItem, ListContainer } from './style';
 import Scroll from '../../baseUI/scroll';
 import Loading from '../../baseUI/loading';
-
+import { renderRoutes } from 'react-router-config';
+ 
 function Singers(props) {
 
     const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
@@ -49,6 +50,10 @@ function Singers(props) {
         pullDownRefreshDispatch (category, alpha);
     };
 
+    const enterDetail = (id) => {
+        props.history.push(`/singers/${id}`)
+    }
+
     const renderSingerList = () => {
         const list = singerList ? singerList.toJS() : [];
         return (
@@ -56,7 +61,7 @@ function Singers(props) {
                 {
                     list.map((item, index) => {
                         return (
-                            <ListItem key={item.id}>
+                            <ListItem key={item.id} onClick={() => enterDetail(item.id)}>
                                 <div className="img_wrapper">
                                     <LazyLoad placeholder={<img width="100%" height="100%" src={require ('./singer.png')} alt="singer"/>}>
                                         <img src={`${item.picUrl}?param=300x300`} width="100%" height="100%" alt="music"/>
@@ -97,6 +102,7 @@ function Singers(props) {
                 </Scroll>
             </ListContainer>
             { enterLoading && <Loading></Loading> }
+            {renderRoutes(props.route.routes)}
         </NavContainer>
     )
 }
