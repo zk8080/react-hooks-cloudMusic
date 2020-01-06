@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:19
- * @LastEditTime : 2020-01-01 22:08:22
+ * @LastEditTime : 2020-01-06 17:33:31
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Rank/index.js
@@ -13,6 +13,7 @@ import { filterIndex }  from '../../api/utils';
 import { Container, List, ListItem, SongList } from './style';
 import Loading from '../../baseUI/loading';
 import Scroll from '../../baseUI/scroll';
+import {renderRoutes} from 'react-router-config';
 
 function Rank(props) {
 
@@ -39,13 +40,17 @@ function Rank(props) {
         ) : null;
     }
 
+    const enterDetail = (id) => {
+        props.history.push(`/rank/${id}`)
+    }
+
     const renderRankList = (list, global) => {
         return (
             <List globalRank={global}>
                 {
                     list.map((item, index) => {
                         return (
-                            <ListItem key={item.id} tracks={item.tracks}>
+                            <ListItem key={item.id} tracks={item.tracks} onClick={() => {enterDetail(item.id)}}>
                                 <div className="img_wrapper">
                                     <img src={item.coverImgUrl} alt="rank"/>
                                     <div className="decorate"></div>
@@ -78,6 +83,7 @@ function Rank(props) {
                     { enterLoading && <Loading></Loading> }
                 </div>
             </Scroll>
+            {renderRoutes(props.route.routes)}
         </Container>
     )
 }
