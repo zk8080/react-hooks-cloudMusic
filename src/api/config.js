@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 17:48:52
- * @LastEditTime : 2019-12-27 15:19:18
+ * @LastEditTime : 2020-01-07 20:25:43
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/config.js
@@ -194,4 +194,12 @@ export const alphaTypes = [{
   }
 ];
 
+// header组件高度
 export const HEADER_HEIGHT = 45;
+
+// 播放模式
+export const playMode = {
+    sequence: 0, // 顺序
+    loop: 1, // 循环 
+    random: 2 // 随机 
+};

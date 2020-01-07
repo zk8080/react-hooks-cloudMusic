@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:16:00
- * @LastEditTime : 2019-12-24 17:48:34
+ * @LastEditTime : 2020-01-07 20:37:14
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Home/index.js
@@ -10,6 +10,7 @@ import React, {Fragment, memo} from 'react';
 import { renderRoutes } from 'react-router-config';
 import { Top, Tab, TabItem } from './style';
 import { NavLink } from 'react-router-dom';
+import Player from '../Player';
 
 function Home(props) {
 
@@ -51,6 +52,7 @@ function Home(props) {
             {
                 renderRoutes(route.routes)
             }
+            <Player></Player>
         </Fragment>
     )
 }
