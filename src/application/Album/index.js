@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-02 21:58:17
- * @LastEditTime : 2020-01-06 22:21:28
+ * @LastEditTime : 2020-01-07 10:19:07
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Album/index.js
@@ -16,8 +16,7 @@ import { getCount, getName, isEmptyObject } from '../../api/utils';
 import style from '../../assets/global-style';
 import { actionCreators } from './store/index';
 import Loading from '../../baseUI/loading';
-
-export const HEADER_HEIGHT = 45;
+import { HEADER_HEIGHT } from '../../api/config';
 
 function Album(props) {
 
