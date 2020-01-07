@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 18:05:18
- * @LastEditTime : 2020-01-04 16:10:38
+ * @LastEditTime : 2020-01-07 12:45:20
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/request.js
@@ -30,4 +30,8 @@ export const getRankListRequest = () => {
 
 export const getAlbumDetailRequest = id => {
     return axiosInstance.get (`/playlist/detail?id=${id}`);
+};
+
+export const getSingerInfoRequest = id => {
+    return axiosInstance.get (`/artists?id=${id}`);
 };

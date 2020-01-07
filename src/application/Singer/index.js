@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-06 17:40:18
- * @LastEditTime : 2020-01-07 11:51:17
+ * @LastEditTime : 2020-01-07 14:13:05
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singer/index.js
@@ -13,93 +13,13 @@ import Header from '../../baseUI/header';
 import Scroll from '../../baseUI/scroll';
 import SongList from '../SongList';
 import { HEADER_HEIGHT } from '../../api/config';
+import { connect } from 'react-redux';
+import { actionCreators } from './store/index';
 
 function Singer(props) {
     const [ showStatus, setShowStatus ] = useState(true);
-
-    const artist = {
-        picUrl: "https://p2.music.126.net/W__FCWFiyq0JdPtuLJoZVQ==/109951163765026271.jpg",
-        name: "薛之谦",
-        hotSongs: [
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-            {
-                name: "我好像在哪见过你",
-                ar: [{name: "薛之谦"}],
-                al: {
-                    name: "薛之谦专辑"
-                }
-            },
-        ]
-    }
+    const { artist: immutableArtist, songs: immutableSongs, enterLoading } = props;
+    const { getSingerInfoDispatch } = props;
 
     const handleBack = useCallback(() => {
         setShowStatus(false)
@@ -114,6 +34,9 @@ function Singer(props) {
     const bgLayerRef = useRef();
     const collectButtonRef = useRef();
 
+
+    const artist = immutableArtist ? immutableArtist.toJS() : {};
+    const songs = immutableSongs ?  immutableSongs.toJS() : [];
 
     // 往上的偏移量
     const OFFSET = 5;
@@ -130,6 +53,14 @@ function Singer(props) {
         // 刷新滚动组件
         songScrollRef.current.refresh();
 
+    }, [])
+
+    useEffect(() => {
+        const id = props.match.params.id;
+        if( !artist.size || !songs.size ){
+            getSingerInfoDispatch(id);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     const handleScroll = useCallback((pos) => {
@@ -194,6 +125,8 @@ function Singer(props) {
 
     }, [])
 
+    
+
     return (
         <CSSTransition
             in={showStatus}
@@ -205,7 +138,7 @@ function Singer(props) {
         >
             <Container>
                 <Header
-                    title={'歌手'}
+                    title={artist.name}
                     handleClick={handleBack}
                     ref={headerRef}
                 ></Header>
@@ -226,7 +159,7 @@ function Singer(props) {
                         onScroll={handleScroll}
                     >
                         <SongList
-                            songs={artist.hotSongs}
+                            songs={songs}
                             showCollect={false}
                         ></SongList>
                     </Scroll>
@@ -236,4 +169,19 @@ function Singer(props) {
     )
 }
 
-export default memo(Singer);
+const mapStateToProps = (state) => ({
+    artist: state.getIn(["singerInfo", "artist"]),
+    songs: state.getIn(["singerInfo", "songsOfArtist"]),
+    enterLoading: state.getIn(["singerInfo", "enterLoading"]),
+})
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        getSingerInfoDispatch(id){
+            dispatch(actionCreators.changeEnterLoading(true));
+            dispatch(actionCreators.getSingerInfo(id))
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(memo(Singer));
