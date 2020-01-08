@@ -1,26 +1,42 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-01-07 20:51:54
+ * @LastEditTime : 2020-01-08 22:05:16
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
  */
-import React, { memo } from 'react';
+import React, { memo, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { actionCreators } from './store/index';
 import MiniPlayer from './miniPlayer';
+import NormalPlayer from './normalPlayer';
 
 function Player(props) {
+
+    const { fullScreen } =  props;
+
+    const { toggleFullScreenDispatch } = props;
+
     const currentSong = {
         al: { picUrl: "https://p1.music.126.net/JL_id1CFwNJpzgrXwemh4Q==/109951164172892390.jpg" },
         name: "木偶人",
         ar: [{name: "薛之谦"}]
     }
     return (
-        <MiniPlayer
-            song={currentSong}
-        ></MiniPlayer>
+        <Fragment>
+            <MiniPlayer
+                song={currentSong}
+                fullScreen={fullScreen}
+                toggleFullScreen={toggleFullScreenDispatch}
+            ></MiniPlayer>
+            <NormalPlayer
+                song={currentSong}
+                fullScreen={fullScreen}
+                toggleFullScreen={toggleFullScreenDispatch}
+            >
+            </NormalPlayer>
+        </Fragment>
     )
 }
 
