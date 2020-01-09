@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-08 23:02:05
+ * @LastEditTime : 2020-01-09 22:57:29
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
@@ -11,6 +11,7 @@ import { getName } from '../../../api/utils';
 import { NormalPlayerContainer, CDWrapper, Top, Middle, Bottom, ProgressWrapper, Operators } from './style';
 import { CSSTransition } from 'react-transition-group';
 import animations from 'create-keyframe-animation';
+import ProgressBar from '../../../baseUI/progressBar';
 
 function NormalPlayer(props) {
 
@@ -136,8 +137,17 @@ function NormalPlayer(props) {
                         </div>
                     </CDWrapper>
                 </Middle>
+                
                 {/* 底部功能按钮 */}
                 <Bottom className="bottom">
+                    {/* 进度条 */}
+                    <ProgressWrapper>
+                        <span className="time time-l">0:00</span>
+                        <div className="progress-bar-wrapper">
+                            <ProgressBar percent={0.2}></ProgressBar>
+                        </div>
+                        <div className="time time-r">4:17</div>
+                    </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
                             <i className="iconfont">&#xe625;</i>
