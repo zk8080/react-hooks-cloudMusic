@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-09 22:57:29
+ * @LastEditTime : 2020-01-11 15:02:18
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
@@ -60,7 +60,6 @@ function NormalPlayer(props) {
         // 两个圆心的横坐标距离和纵坐标距离
         const x = -(window.innerWidth / 2 - paddingLeft);
         const y = window.innerHeight - paddingTop - width / 2 - paddingBottom;
-        console.log(x, y, scale, '----xyscale---')
         return {
             x,
             y,
