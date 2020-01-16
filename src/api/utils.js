@@ -36,3 +36,7 @@ export const getName = list => {
 
 //判断一个对象是否为空
 export const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
+
+export const getSongUrl = id => {
+    return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
+};

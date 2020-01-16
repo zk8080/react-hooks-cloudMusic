@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-11 15:02:18
+ * @LastEditTime : 2020-01-16 21:26:04
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
@@ -15,8 +15,8 @@ import ProgressBar from '../../../baseUI/progressBar';
 
 function NormalPlayer(props) {
 
-    const { song, fullScreen } = props;
-    const { toggleFullScreen } = props;
+    const { song, fullScreen, playing } = props;
+    const { toggleFullScreen, clickPlaying } = props;
 
     const normalPlayerRef = useRef();
     const cdWrapperRef = useRef();
@@ -129,7 +129,7 @@ function NormalPlayer(props) {
                     <CDWrapper ref={cdWrapperRef}>
                         <div className="cd">
                             <img
-                                className="image play"
+                                className={`image play ${playing ? "" : "pause"}`}
                                 src={song.al.picUrl + "?param=400x400"}
                                 alt=""
                             />
@@ -155,7 +155,13 @@ function NormalPlayer(props) {
                             <i className="iconfont">&#xe6e1;</i>
                         </div>
                         <div className="icon i-center">
-                            <i className="iconfont">&#xe723;</i>
+                            <i 
+                                className="iconfont"
+                                onClick={e => clickPlaying(e, !playing)}
+                                dangerouslySetInnerHTML={{
+                                    __html: playing ? "&#xe723;" : "&#xe731;"
+                                }}
+                            ></i>
                         </div>
                         <div className="icon i-right">
                             <i className="iconfont">&#xe718;</i>

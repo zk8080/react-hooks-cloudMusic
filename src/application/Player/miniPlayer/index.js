@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:41:27
- * @LastEditTime : 2020-01-09 21:57:07
+ * @LastEditTime : 2020-01-16 17:37:00
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/miniPlayer/index.js
@@ -14,12 +14,11 @@ import ProgressCircle from '../../../baseUI/progress-circle';
 
 function MiniPlayer(props) {
 
-    const { song, fullScreen } = props;
+    const { song, fullScreen, playing, percent } = props;
 
-    const { toggleFullScreen } = props;
+    const { toggleFullScreen, clickPlaying } = props;
 
     const miniPlayerRef = useRef();
-
     return (
         <CSSTransition
             in={!fullScreen} 
@@ -35,19 +34,24 @@ function MiniPlayer(props) {
             <MiniPlayerContainer ref={miniPlayerRef} onClick={() => {toggleFullScreen(true)}} >
                 <div className="icon">
                     <div className="imgWrapper">
-                        <img className="play" src={song.al.picUrl} width="40" height="40" alt="img"/>
+                        <img className={`play ${playing ? '' : 'pause'}`} src={song.al.picUrl} width="40" height="40" alt="img"/>
                     </div>
                 </div>
                 <div className="text">
                     <h2 className="name">{song.name}</h2>
-                    <p className="desc">{getName (song.ar)}</p>
+                    <p className="desc">{getName(song.ar)}</p>
                 </div>
                 <div className="control">
                     <ProgressCircle
                         radius={32} 
-                        percent={0.2}
+                        percent={percent}
                     >
-                        <i className="icon-mini iconfont icon-pause">&#xe650;</i>
+                        {
+                            playing ? 
+                                <i className="icon-mini iconfont icon-pause" onClick={e => clickPlaying(e, false)} >&#xe650;</i>
+                                : <i className="icon-mini iconfont icon-play" onClick={e => clickPlaying(e, true)}>&#xe61e;</i>
+                        }
+                        
                     </ProgressCircle>
                     
                 </div>
