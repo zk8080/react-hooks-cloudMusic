@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-19 11:44:17
+ * @LastEditTime : 2020-01-19 15:30:15
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
@@ -12,11 +12,12 @@ import { NormalPlayerContainer, CDWrapper, Top, Middle, Bottom, ProgressWrapper,
 import { CSSTransition } from 'react-transition-group';
 import animations from 'create-keyframe-animation';
 import ProgressBar from '../../../baseUI/progressBar';
+import { playMode } from '../../../api/config';
 
 function NormalPlayer(props) {
 
-    const { song, fullScreen, playing, percent, duration, currentTime, handlePrev, handleNext } = props;
-    const { toggleFullScreen, clickPlaying, onProgressChange } = props;
+    const { song, fullScreen, playing, percent, duration, currentTime, mode } = props;
+    const { toggleFullScreen, clickPlaying, onProgressChange, handlePrev, handleNext, changeMode} = props;
 
     const normalPlayerRef = useRef();
     const cdWrapperRef = useRef();
@@ -74,7 +75,7 @@ function NormalPlayer(props) {
         cdWrapperDom.style.animation = "";
     }
 
-
+    // 离开
     const leave = () => {
         if (!cdWrapperRef.current) return;
         const cdWrapperDom = cdWrapperRef.current;
@@ -83,6 +84,7 @@ function NormalPlayer(props) {
         cdWrapperDom.style["transform"] = `translate3d(${x}px, ${y}px, 0) scale(${scale})`;
     };
 
+    // 离开页面之后
     const afterLeave = () => {
         if (!cdWrapperRef.current) return;
         const cdWrapperDom = cdWrapperRef.current;
@@ -93,6 +95,17 @@ function NormalPlayer(props) {
         normalPlayerRef.current.style.display = "none";
     };
 
+    const getPlayMode = () => {
+        let content;
+        if (mode === playMode.sequence) {
+            content = "&#xe625;";
+        } else if (mode === playMode.loop) {
+            content = "&#xe653;";
+        } else {
+            content = "&#xe61b;";
+        }
+        return content;
+    }
     return (
         <CSSTransition
             classNames="normal"
@@ -151,8 +164,11 @@ function NormalPlayer(props) {
                         <div className="time time-r">{formatPlayTime(duration)}</div>
                     </ProgressWrapper>
                     <Operators>
-                        <div className="icon i-left" >
-                            <i className="iconfont">&#xe625;</i>
+                        <div className="icon i-left" onClick={changeMode} >
+                            <i 
+                                className="iconfont"
+                                dangerouslySetInnerHTML={{ __html: getPlayMode() }}
+                            ></i>
                         </div>
                         <div className="icon i-left" onClick={handlePrev}>
                             <i className="iconfont">&#xe6e1;</i>
