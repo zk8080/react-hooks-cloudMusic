@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 10:14:34
- * @LastEditTime : 2020-01-04 17:55:58
+ * @LastEditTime : 2020-01-19 10:48:42
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/utils.js
@@ -39,4 +39,12 @@ export const isEmptyObject = obj => !obj || Object.keys(obj).length === 0;
 
 export const getSongUrl = id => {
     return `https://music.163.com/song/media/outer/url?id=${id}.mp3`;
+};
+
+//转换歌曲播放时间
+export const formatPlayTime = interval => {
+    interval = interval | 0;
+    const minute = (interval / 60) | 0;
+    const second = (interval % 60).toString().padStart(2, "0");
+    return `${minute}:${second}`;
 };

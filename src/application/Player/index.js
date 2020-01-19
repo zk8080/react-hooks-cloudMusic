@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-01-16 21:09:34
+ * @LastEditTime : 2020-01-19 10:55:05
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
@@ -129,6 +129,19 @@ function Player(props) {
         togglePlayingDispatch(flag);
     }
 
+    const updateTime = (e) => {
+        setCurrentTime(e.target.currentTime)
+    }
+
+    const onProgressChange = curPercent => {
+        const newTime = curPercent * duration;
+        setCurrentTime(newTime);
+        audioRef.current.currentTime = newTime;
+        if (!playing) {
+          togglePlayingDispatch(true);
+        }
+    };
+
     return (
         <Fragment>
             {
@@ -149,11 +162,17 @@ function Player(props) {
                     toggleFullScreen={toggleFullScreenDispatch}
                     clickPlaying={clickPlaying}
                     percent={percent}
+                    currentTime={currentTime}//播放时间
+                    duration={duration} // 总时长
+                    onProgressChange={onProgressChange} // 滑动滚动条
                 >
                 </NormalPlayer>
             }
             
-            <audio ref={audioRef}></audio>
+            <audio 
+                ref={audioRef}
+                onTimeUpdate={updateTime}
+            ></audio>
         </Fragment>
     )
 }

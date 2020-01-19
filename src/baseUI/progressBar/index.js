@@ -1,15 +1,17 @@
 /*
  * @Author: your name
  * @Date: 2020-01-09 22:52:08
- * @LastEditTime : 2020-01-11 15:57:41
+ * @LastEditTime : 2020-01-19 10:52:49
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/baseUI/progressBar/index.js
  */
-import React, { memo, useRef, useState } from 'react';
+import React, { memo, useRef, useState, useEffect } from 'react';
 import { ProgressBarWrapper } from './style';
 
 function ProgressBar(props) {
+
+    const { percent } = props;
 
     const { percentChange } = props;
 
@@ -20,6 +22,16 @@ function ProgressBar(props) {
     const  [touch, setTouch] = useState({});
 
     const progressBtnWidth = 16;  
+
+    useEffect(() => {
+        if(percent >= 0 && percent <= 1 && !touch.initiated) {
+          const barWidth = progressBarRef.current.clientWidth - progressBtnWidth;
+          const offsetWidth = percent * barWidth;
+          progressRef.current.style.width = `${offsetWidth}px`;
+          progressBtnRef.current.style["transform"] = `translate3d(${offsetWidth}px, 0, 0)`;
+        }
+        // eslint-disable-next-line
+    }, [percent]);
 
     // 执行父组件的回调函数 将改变的新的进度传递给父组件
     const _changePercent = () => {

@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-16 21:26:04
+ * @LastEditTime : 2020-01-19 10:54:12
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
  */
 import React, { memo, useRef } from 'react';
-import { getName } from '../../../api/utils';
+import { getName, formatPlayTime } from '../../../api/utils';
 import { NormalPlayerContainer, CDWrapper, Top, Middle, Bottom, ProgressWrapper, Operators } from './style';
 import { CSSTransition } from 'react-transition-group';
 import animations from 'create-keyframe-animation';
@@ -15,8 +15,8 @@ import ProgressBar from '../../../baseUI/progressBar';
 
 function NormalPlayer(props) {
 
-    const { song, fullScreen, playing } = props;
-    const { toggleFullScreen, clickPlaying } = props;
+    const { song, fullScreen, playing, percent, duration, currentTime } = props;
+    const { toggleFullScreen, clickPlaying, onProgressChange } = props;
 
     const normalPlayerRef = useRef();
     const cdWrapperRef = useRef();
@@ -141,11 +141,14 @@ function NormalPlayer(props) {
                 <Bottom className="bottom">
                     {/* 进度条 */}
                     <ProgressWrapper>
-                        <span className="time time-l">0:00</span>
+                        <span className="time time-l">{formatPlayTime(currentTime)}</span>
                         <div className="progress-bar-wrapper">
-                            <ProgressBar percent={0.2}></ProgressBar>
+                            <ProgressBar 
+                                percent={percent}
+                                percentChange={onProgressChange}
+                            ></ProgressBar>
                         </div>
-                        <div className="time time-r">4:17</div>
+                        <div className="time time-r">{formatPlayTime(duration)}</div>
                     </ProgressWrapper>
                     <Operators>
                         <div className="icon i-left" >
