@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:16:20
- * @LastEditTime : 2020-01-07 20:29:09
+ * @LastEditTime : 2020-01-19 14:19:50
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/store/reducer.js
@@ -16,7 +16,7 @@ const defaultState = fromJS({
     sequencePlayList: [], // 顺序列表 (因为之后会有随机模式，列表会乱序，因从拿这个保存顺序列表)
     playList: [],
     mode: playMode.sequence,// 播放模式
-    currentIndex: -1,// 当前歌曲在播放列表的索引位置
+    currentIndex: 0,// 当前歌曲在播放列表的索引位置
     showPlayList: false,// 是否展示播放列表
     currentSong: {} 
 });

@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-19 10:54:12
+ * @LastEditTime : 2020-01-19 11:44:17
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
@@ -15,7 +15,7 @@ import ProgressBar from '../../../baseUI/progressBar';
 
 function NormalPlayer(props) {
 
-    const { song, fullScreen, playing, percent, duration, currentTime } = props;
+    const { song, fullScreen, playing, percent, duration, currentTime, handlePrev, handleNext } = props;
     const { toggleFullScreen, clickPlaying, onProgressChange } = props;
 
     const normalPlayerRef = useRef();
@@ -154,7 +154,7 @@ function NormalPlayer(props) {
                         <div className="icon i-left" >
                             <i className="iconfont">&#xe625;</i>
                         </div>
-                        <div className="icon i-left">
+                        <div className="icon i-left" onClick={handlePrev}>
                             <i className="iconfont">&#xe6e1;</i>
                         </div>
                         <div className="icon i-center">
@@ -166,7 +166,7 @@ function NormalPlayer(props) {
                                 }}
                             ></i>
                         </div>
-                        <div className="icon i-right">
+                        <div className="icon i-right" onClick={handleNext}>
                             <i className="iconfont">&#xe718;</i>
                         </div>
                         <div className="icon i-right">

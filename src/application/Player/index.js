@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-01-19 10:55:05
+ * @LastEditTime : 2020-01-19 14:23:47
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
@@ -15,9 +15,19 @@ import {getSongUrl, isEmptyObject} from '../../api/utils';
 
 function Player(props) {
 
-    const { fullScreen, playing, currentIndex, currentSong: immutableCurrentSong } = props;
+    const { fullScreen, 
+            playing, 
+            currentIndex, 
+            currentSong: immutableCurrentSong, 
+            mode, 
+            sequencePlayList:immutableSequencePlayList,//顺序列表
+        } = props;
 
-    const { toggleFullScreenDispatch, togglePlayingDispatch, changeCurrentIndexDispatch, changeCurrentDispatch } = props;
+    const { toggleFullScreenDispatch, 
+            togglePlayingDispatch, 
+            changeCurrentIndexDispatch, 
+            changeCurrentDispatch 
+        } = props;
 
     const playList = [
         {
@@ -102,27 +112,37 @@ function Player(props) {
     const [currentTime, setCurrentTime] = useState(0);
     // 歌曲总时长
     const [duration, setDuration] = useState(0);
+    //记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
+    const [preSong, setPreSong] = useState({});
     // 播放进度
     const percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
     useEffect(() => {
-        if(!currentSong) return;
-        changeCurrentIndexDispatch(0);//currentIndex默认为-1，临时改成0
-        let current = playList[0];
-        changeCurrentDispatch(current);//赋值currentSong
-        audioRef.current.src = getSongUrl(current.id);
-        setTimeout(() => {
-            audioRef.current.play();
-        }, 0);
-        togglePlayingDispatch(true);//播放状态
-        setCurrentTime(0);//从头开始播放
-        setDuration((current.dt / 1000) | 0);//时长
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
-
-    useEffect(() => {
         playing ? audioRef.current.play() : audioRef.current.pause();
     }, [playing]);
+
+    useEffect(() => {
+        // 当播放列表和播放歌曲下标改变时 进行处理
+        // 如果没有列表或者当前歌曲和上次歌曲一样，则不进行播放
+        if( !playList.length 
+            || currentIndex === -1 
+            || !playList[currentIndex] 
+            || preSong.id === playList[currentIndex].id ){
+            return;
+        }
+        // 获取当前歌曲
+        let curSong = playList[currentIndex];
+        changeCurrentDispatch(curSong);
+        setPreSong(curSong);
+        audioRef.current.src = getSongUrl(curSong.id);
+        setTimeout(() => {
+            audioRef.current.play();
+        })
+        togglePlayingDispatch(true);
+        setCurrentTime(0);//从头开始播放
+        setDuration((curSong.dt / 1000) | 0);//时长
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [playList, currentIndex])
 
     const clickPlaying = (e, flag) => {
         e.stopPropagation();
@@ -141,6 +161,51 @@ function Player(props) {
           togglePlayingDispatch(true);
         }
     };
+
+    // 单曲循环
+    const handleLoop = () => {
+        audioRef.current.currentTime = 0;
+        togglePlayingDispatch(true);
+        audioRef.current.play();
+    }
+
+    // 上一曲
+    const handlePrev = () => {
+        // 只有一首歌时  进行单曲循环的操作
+        if( playList.length === 1 ){
+            handleLoop();
+            return;
+        }
+        // 获取上一首歌的下标
+        let index = currentIndex - 1;
+        // 如果index < 0，则表示当前歌曲为第一首 则播放最后一首
+        if( index < 0 ){
+            index = playList.length - 1;
+        }
+        if(!playing) {
+            togglePlayingDispatch(true);
+        }
+        changeCurrentIndexDispatch(index);
+    }
+
+    // 下一曲
+    const handleNext = () => {
+        // 只有一首歌时  进行单曲循环的操作
+        if( playList.length === 1 ){
+            handleLoop();
+            return;
+        }
+        // 获取下一首歌的下标
+        let index = currentIndex + 1;
+        // 如果index 等于playList的长度，则表示当前歌曲为最后一首 则播放第一首
+        if( index === playList.length ){
+            index = 0;
+        }
+        if(!playing) {
+            togglePlayingDispatch(true);
+        }
+        changeCurrentIndexDispatch(index);
+    }
 
     return (
         <Fragment>
@@ -165,6 +230,8 @@ function Player(props) {
                     currentTime={currentTime}//播放时间
                     duration={duration} // 总时长
                     onProgressChange={onProgressChange} // 滑动滚动条
+                    handlePrev={handlePrev}
+                    handleNext={handleNext}
                 >
                 </NormalPlayer>
             }
