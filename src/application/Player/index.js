@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-01-19 15:28:53
+ * @LastEditTime : 2020-01-19 16:22:12
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
@@ -11,7 +11,9 @@ import { connect } from 'react-redux';
 import { actionCreators } from './store/index';
 import MiniPlayer from './miniPlayer';
 import NormalPlayer from './normalPlayer';
+import Toast from '../../baseUI/toast/index';
 import { getSongUrl, isEmptyObject, findIndex, shuffle } from '../../api/utils';
+import { playMode } from '../../api/config';
 
 function Player(props) {
 
@@ -38,12 +40,18 @@ function Player(props) {
     const sequencePlayList = immutableSequencePlayList.toJS();
 
     const audioRef = useRef();
+    const toastRef = useRef();
+
     // 目前播放时间
     const [currentTime, setCurrentTime] = useState(0);
     // 歌曲总时长
     const [duration, setDuration] = useState(0);
     //记录当前的歌曲，以便于下次重渲染时比对是否是一首歌
     const [preSong, setPreSong] = useState({});
+
+    // 切换模式提示信息
+    const [ modeText, setModeText ] = useState('');
+
     // 播放进度
     const percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
@@ -74,15 +82,18 @@ function Player(props) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [playList, currentIndex])
 
+    // 修改播放状态
     const clickPlaying = (e, flag) => {
         e.stopPropagation();
         togglePlayingDispatch(flag);
     }
 
+    // 更新播放时间
     const updateTime = (e) => {
         setCurrentTime(e.target.currentTime)
     }
 
+    // 改变进度
     const onProgressChange = curPercent => {
         const newTime = curPercent * duration;
         setCurrentTime(newTime);
@@ -137,6 +148,7 @@ function Player(props) {
         changeCurrentIndexDispatch(index);
     }
 
+    // 切换模式
     const changeMode = () => {
         let newMode = (mode + 1) % 3;
         if (newMode === 0) {
@@ -144,20 +156,32 @@ function Player(props) {
             changePlayListDispatch(sequencePlayList);
             let index = findIndex(currentSong, sequencePlayList);
             changeCurrentIndexDispatch(index);
+            setModeText('顺序循环')
         } else if (newMode === 1) {
             //单曲循环
             // changePlayListDispatch(sequencePlayList);
             changePlayListDispatch([currentSong]);
+            setModeText('单曲循环')
         } else if (newMode === 2) {
             //随机播放
             let newList = shuffle(sequencePlayList);
             let index = findIndex(currentSong, newList);
             changePlayListDispatch(newList);
             changeCurrentIndexDispatch(index);
+            setModeText('随机播放')
         }
         changeModeDispatch(newMode);
+        toastRef.current.show();
     };
 
+    // 歌曲播放结束
+    const handleAudioEnd  = () => {
+        if(mode === playMode.loop){
+            handleLoop();
+        }else{
+            handleNext();
+        }
+    }
     return (
         <Fragment>
             {
@@ -192,7 +216,12 @@ function Player(props) {
             <audio
                 ref={audioRef}
                 onTimeUpdate={updateTime}
+                onEnded={handleAudioEnd}
             ></audio>
+            <Toast
+                text={modeText}
+                ref={toastRef}
+            ></Toast>
         </Fragment>
     )
 }
