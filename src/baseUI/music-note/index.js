@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-20 17:52:14
- * @LastEditTime : 2020-01-23 11:35:38
+ * @LastEditTime : 2020-01-28 15:55:01
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/baseUI/music-note/index.js
@@ -29,10 +29,8 @@ const MusicNote = forwardRef((props, ref) => {
         // 类数组转换成数组，当然也可以用 [...xxx] 解构语法或者 Array.from ()
         let domArray = [].slice.call(iconRef.current.children);
         domArray.forEach(item => {
-            console.log(item, '---item=---')
             item.running = false;
             item.addEventListener('transitionend', function () {
-                console.log(this, '---this--')
                 this.style['display'] = 'none';
                 this.style["transform"] = `translate3d(0, 0, 0)`;
                 this.running = false;

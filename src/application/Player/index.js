@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-01-19 16:22:12
+ * @LastEditTime : 2020-01-28 16:48:59
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
@@ -52,6 +52,9 @@ function Player(props) {
     // 切换模式提示信息
     const [ modeText, setModeText ] = useState('');
 
+    // 歌曲缓存是否完成标识
+    const [songReady, setSongReady] = useState(true);
+
     // 播放进度
     const percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
 
@@ -62,19 +65,26 @@ function Player(props) {
     useEffect(() => {
         // 当播放列表和播放歌曲下标改变时 进行处理
         // 如果没有列表或者当前歌曲和上次歌曲一样，则不进行播放
+        // 如果没有缓存完成也不进行播放
         if (!playList.length
             || currentIndex === -1
             || !playList[currentIndex]
-            || preSong.id === playList[currentIndex].id) {
+            || preSong.id === playList[currentIndex].id
+            || !songReady
+            ) {
             return;
         }
         // 获取当前歌曲
         let curSong = playList[currentIndex];
-        changeCurrentDispatch(curSong);
         setPreSong(curSong);
+        setSongReady(false); // 将缓存标识设置为false,表示没有缓存成功
+        changeCurrentDispatch(curSong);
         audioRef.current.src = getSongUrl(curSong.id);
         setTimeout(() => {
-            audioRef.current.play();
+            audioRef.current.play().then(res => {
+                // 歌曲开始播放后将标识设置为true
+                setSongReady(true);
+            });
         })
         togglePlayingDispatch(true);
         setCurrentTime(0);//从头开始播放
@@ -182,6 +192,12 @@ function Player(props) {
             handleNext();
         }
     }
+
+    const handleError = () => {
+        setSongReady(true)
+        alert ("播放出错");
+    };
+
     return (
         <Fragment>
             {
@@ -217,6 +233,7 @@ function Player(props) {
                 ref={audioRef}
                 onTimeUpdate={updateTime}
                 onEnded={handleAudioEnd}
+                onError={handleError}
             ></audio>
             <Toast
                 text={modeText}
