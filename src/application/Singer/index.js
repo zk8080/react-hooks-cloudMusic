@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-06 17:40:18
- * @LastEditTime : 2020-01-07 14:13:05
+ * @LastEditTime : 2020-01-28 11:40:52
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singer/index.js
@@ -15,6 +15,8 @@ import SongList from '../SongList';
 import { HEADER_HEIGHT } from '../../api/config';
 import { connect } from 'react-redux';
 import { actionCreators } from './store/index';
+import MusicNote from '../../baseUI/music-note/index';
+import Loading from '../../baseUI/loading/index';
 
 function Singer(props) {
     const [ showStatus, setShowStatus ] = useState(true);
@@ -33,6 +35,7 @@ function Singer(props) {
     const headerRef = useRef();
     const bgLayerRef = useRef();
     const collectButtonRef = useRef();
+    const musicNoteRef = useRef();
 
 
     const artist = immutableArtist ? immutableArtist.toJS() : {};
@@ -125,7 +128,9 @@ function Singer(props) {
 
     }, [])
 
-    
+    const musicAnimation = (x, y) => {
+        musicNoteRef.current.startAnimation({ x, y });
+    };
 
     return (
         <CSSTransition
@@ -161,9 +166,14 @@ function Singer(props) {
                         <SongList
                             songs={songs}
                             showCollect={false}
+                            musicAnimation={musicAnimation}
                         ></SongList>
                     </Scroll>
                 </SongListWrapper>
+                <MusicNote ref={musicNoteRef}></MusicNote>
+                {
+                    enterLoading && <Loading></Loading>
+                }
             </Container>
         </CSSTransition>
     )

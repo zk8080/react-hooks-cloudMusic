@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-06 22:18:46
- * @LastEditTime : 2020-01-06 22:56:46
+ * @LastEditTime : 2020-01-28 10:58:45
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/SongList/style.js
@@ -9,16 +9,23 @@
 import React, { memo, forwardRef } from 'react';
 import { SongList, SongItem } from './style';
 import { getName } from '../../api/utils';
+import {connect} from 'react-redux';
+import * as actionCreators from '../Player/store/actionCreators';
 
 const SongsList = forwardRef((props, ref) => {
 
     const { collectCount, showCollect, songs } = props;
 
-    const totalCount = songs.length;
+    const { changeCurrentIndexDispatch, changePlayListDispatch, changeSequecePlayListDispatch, musicAnimation } = props;
 
     const selectItem = (e, index) => {
-        console.log (index);
+        changePlayListDispatch(songs);
+        changeSequecePlayListDispatch(songs);
+        changeCurrentIndexDispatch(index);
+        musicAnimation(e.nativeEvent.clientX, e.nativeEvent.clientY);
     }
+
+    const totalCount = songs.length;
 
     const collect = (count) => {
         return (
@@ -64,4 +71,18 @@ const SongsList = forwardRef((props, ref) => {
     )
 })
 
-export default memo(SongsList);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        changePlayListDispatch(data){
+            dispatch(actionCreators.changePlayList(data))
+        },
+        changeCurrentIndexDispatch(data){
+            dispatch(actionCreators.changeCurrentIndex(data))
+        },
+        changeSequecePlayListDispatch(data){
+            dispatch(actionCreators.changeSequecePlayList(data))
+        }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(memo(SongsList));

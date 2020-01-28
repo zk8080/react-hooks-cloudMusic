@@ -1,13 +1,13 @@
 /*
  * @Author: your name
  * @Date: 2020-01-02 21:58:17
- * @LastEditTime : 2020-01-07 10:19:07
+ * @LastEditTime : 2020-01-28 11:50:02
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Album/index.js
  */
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
-import { Container, TopDesc, Menu, SongList, SongItem } from './style';
+import { Container, TopDesc, Menu, SongItem } from './style';
 import { CSSTransition } from 'react-transition-group';
 import {connect} from 'react-redux';
 import Header from '../../baseUI/header/index';
@@ -17,6 +17,8 @@ import style from '../../assets/global-style';
 import { actionCreators } from './store/index';
 import Loading from '../../baseUI/loading';
 import { HEADER_HEIGHT } from '../../api/config';
+import MusicNote from '../../baseUI/music-note/index';
+import SongList from '../SongList/index';
 
 function Album(props) {
 
@@ -27,6 +29,7 @@ function Album(props) {
     const [title, setTitle] = useState ("歌单");
 
     const headerRef = useRef();
+    const musicNoteRef = useRef();
 
     // 从路由中拿到歌单的 id
     const id = props.match.params.id;
@@ -111,39 +114,9 @@ function Album(props) {
         }
     }
 
-    const renderSongList = () => {
-        return (
-            <SongList>
-                <div className="first_line">
-                <div className="play_all">
-                    <i className="iconfont">&#xe6e3;</i>
-                    <span>播放全部 <span className="sum">(共{currentAlbum.tracks.length}首)</span></span>
-                </div>
-                <div className="add_list">
-                    <i className="iconfont">&#xe62d;</i>
-                    <span>收藏({getCount(currentAlbum.subscribedCount)})</span>
-                </div>
-                </div>
-                <SongItem>
-                {
-                    currentAlbum.tracks.map((item, index) => {
-                    return (
-                        <li key={index}>
-                        <span className="index">{index + 1}</span>
-                        <div className="info">
-                            <span>{item.name}</span>
-                            <span>
-                            {getName(item.ar)} - {item.al.name}
-                            </span>
-                        </div>
-                        </li>
-                    )
-                    })
-                }
-                </SongItem>
-            </SongList>
-        )
-    }
+    const musicAnimation = (x, y) => {
+        musicNoteRef.current.startAnimation({ x, y });
+    };
 
     return (
         <CSSTransition
@@ -164,14 +137,20 @@ function Album(props) {
                 {!isEmptyObject(currentAlbum) ?
                     (
                         <Scroll
-                        bounceTop={false}
-                        onScroll={handleScroll}
+                            bounceTop={false}
+                            onScroll={handleScroll}
                         >
-                        <div>
-                            { renderTopDesc() }
-                            { renderMenu() }
-                            { renderSongList() }
-                        </div>
+                            <div>
+                                { renderTopDesc() }
+                                { renderMenu() }
+                                <SongList
+                                    songs={currentAlbum.tracks}
+                                    collectCount={currentAlbum.subscribedCount}
+                                    showCollect={true}
+                                    showBackground={true}
+                                    musicAnimation={musicAnimation}
+                                ></SongList>
+                            </div>
                         </Scroll>
                     )
                     : null
@@ -179,6 +158,7 @@ function Album(props) {
                 {
                     enterLoading && <Loading></Loading>
                 }
+                <MusicNote ref={musicNoteRef}></MusicNote>
             </Container>
         </CSSTransition>
     )
