@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:19
- * @LastEditTime : 2020-01-06 17:33:31
+ * @LastEditTime : 2020-01-28 12:17:43
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Rank/index.js
@@ -17,7 +17,7 @@ import {renderRoutes} from 'react-router-config';
 
 function Rank(props) {
 
-    const { rankList, enterLoading } = props;
+    const { rankList, enterLoading, songsCount } = props;
 
     const { getRankListDispatch } = props;
 
@@ -73,7 +73,9 @@ function Rank(props) {
     const officialList = list.slice(0, globalStartIndex);
     let displayStyle = enterLoading ? {"display":"none"}:  {"display": ""};
     return (
-        <Container>
+        <Container
+            play={songsCount}
+        >
             <Scroll>
                 <div>
                     <h1 className="offical" style={displayStyle}> 官方榜 </h1>
@@ -91,6 +93,7 @@ function Rank(props) {
 const mapStateToProps = (state) => ({
     rankList: state.getIn(['rank', 'rankList']),
     enterLoading: state.getIn(['rank', 'enterLoading']),
+    songsCount: state.getIn(['player', 'playList']).size
 })
 
 const mapDispatchToProps = (dispatch) => {

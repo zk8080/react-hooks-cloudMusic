@@ -1,18 +1,18 @@
 /*
  * @Author: your name
  * @Date: 2020-01-02 21:58:17
- * @LastEditTime : 2020-01-28 11:50:02
+ * @LastEditTime : 2020-01-28 12:08:36
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Album/index.js
  */
 import React, { memo, useState, useCallback, useRef, useEffect } from 'react';
-import { Container, TopDesc, Menu, SongItem } from './style';
+import { Container, TopDesc, Menu } from './style';
 import { CSSTransition } from 'react-transition-group';
 import {connect} from 'react-redux';
 import Header from '../../baseUI/header/index';
 import Scroll from '../../baseUI/scroll';
-import { getCount, getName, isEmptyObject } from '../../api/utils';
+import { isEmptyObject } from '../../api/utils';
 import style from '../../assets/global-style';
 import { actionCreators } from './store/index';
 import Loading from '../../baseUI/loading';
@@ -34,7 +34,7 @@ function Album(props) {
     // 从路由中拿到歌单的 id
     const id = props.match.params.id;
 
-    const { currentAlbum: currentAlbumImmutable, enterLoading } = props;
+    const { currentAlbum: currentAlbumImmutable, enterLoading, songsCount } = props;
     const { getAlbumDataDispatch } = props;
 
     useEffect(() => {
@@ -127,7 +127,7 @@ function Album(props) {
             unmountOnExit
             onExited={props.history.goBack}
         >
-            <Container>
+            <Container play={songsCount}>
                 <Header
                     title={title} 
                     handleClick={handleBack}
@@ -167,6 +167,7 @@ function Album(props) {
 const mapStateToProps = (state) => ({
     currentAlbum: state.getIn(['album', 'currentAlbum']),
     enterLoading: state.getIn(['album', 'enterLoading']),
+    songsCount: state.getIn(['player', 'playList']).size
 })
 
 const mapDispatchToProps = (dispatch) => {

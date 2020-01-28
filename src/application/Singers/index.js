@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:19:08
- * @LastEditTime : 2020-01-06 17:44:47
+ * @LastEditTime : 2020-01-28 12:16:51
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/index.js
@@ -19,7 +19,7 @@ import { renderRoutes } from 'react-router-config';
  
 function Singers(props) {
 
-    const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount } = props;
+    const { singerList, enterLoading, pullUpLoading, pullDownLoading, pageCount, songsCount } = props;
     const { getHotSingerDispatch, updateDispatch, pullUpRefreshDispatch, pullDownRefreshDispatch } = props;
 
     const [ category, setCategory ] = useState('');
@@ -90,7 +90,9 @@ function Singers(props) {
                 curVal={alpha}
                 handClick={val => handleUpdateAlpha(val)}
             ></Horizen>
-            <ListContainer>
+            <ListContainer
+                play={songsCount}
+            >
                 <Scroll
                     pullUp={handlePullUp}
                     pullDown={handlePullDown}
@@ -112,7 +114,8 @@ const mapStateToProps = (state) => ({
     enterLoading: state.getIn(['singers', 'enterLoading']),
     pullUpLoading: state.getIn(['singers', 'pullUpLoading']),
     pullDownLoading: state.getIn(['singers', 'pullDownLoading']),
-    pageCount: state.getIn(['singers', 'pageCount'])
+    pageCount: state.getIn(['singers', 'pageCount']),
+    songsCount: state.getIn(['player', 'playList']).size
 });
 
 const mapDispatchToProps = (dispatch) => {

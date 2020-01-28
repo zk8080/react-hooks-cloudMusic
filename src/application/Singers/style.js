@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-27 15:21:58
- * @LastEditTime : 2019-12-28 20:05:56
+ * @LastEditTime : 2020-01-28 12:13:28
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Singers/style.js
@@ -22,7 +22,7 @@ export const ListContainer = styled.div`
   position: fixed;
   top: 160px;
   left: 0;
-  bottom: 0;
+  bottom: ${props => props.play > 0 ? '60px': 0};
   overflow: hidden;
   width: 100%;
 `;
@@ -50,9 +50,9 @@ export const ListItem = styled.div`
     .img_wrapper {
         margin-right: 20px;
         img {
-        border-radius: 3px;
-        width: 50px;
-        height: 50px;
+            border-radius: 3px;
+            width: 50px;
+            height: 50px;
         }
     }
     .name {
