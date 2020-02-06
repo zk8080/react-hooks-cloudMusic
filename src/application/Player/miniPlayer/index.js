@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:41:27
- * @LastEditTime : 2020-01-16 17:37:00
+ * @LastEditTime : 2020-02-03 11:22:42
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/miniPlayer/index.js
@@ -16,9 +16,15 @@ function MiniPlayer(props) {
 
     const { song, fullScreen, playing, percent } = props;
 
-    const { toggleFullScreen, clickPlaying } = props;
+    const { toggleFullScreen, clickPlaying, togglePlayList } = props;
 
     const miniPlayerRef = useRef();
+
+    const handleTogglePlayList = (e) => {
+        togglePlayList(true);
+        e.stopPropagation();
+    }
+
     return (
         <CSSTransition
             in={!fullScreen} 
@@ -55,7 +61,7 @@ function MiniPlayer(props) {
                     </ProgressCircle>
                     
                 </div>
-                <div className="control">
+                <div className="control" onClick={handleTogglePlayList}>
                     <i className="iconfont">&#xe640;</i>
                 </div>
             </MiniPlayerContainer>

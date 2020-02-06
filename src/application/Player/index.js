@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-01-28 16:48:59
+ * @LastEditTime : 2020-02-03 11:30:02
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
@@ -14,6 +14,7 @@ import NormalPlayer from './normalPlayer';
 import Toast from '../../baseUI/toast/index';
 import { getSongUrl, isEmptyObject, findIndex, shuffle } from '../../api/utils';
 import { playMode } from '../../api/config';
+import PlayList from './playList/index';
 
 function Player(props) {
 
@@ -31,7 +32,8 @@ function Player(props) {
         changeCurrentIndexDispatch,
         changeCurrentDispatch,
         changePlayListDispatch,
-        changeModeDispatch
+        changeModeDispatch,
+        togglePlayListDispatch
     } = props;
 
     
@@ -208,6 +210,7 @@ function Player(props) {
                     toggleFullScreen={toggleFullScreenDispatch}
                     clickPlaying={clickPlaying}
                     percent={percent}
+                    togglePlayList={togglePlayListDispatch}
                 ></MiniPlayer>
             }
             {
@@ -225,6 +228,7 @@ function Player(props) {
                     handleNext={handleNext}
                     mode={mode}
                     changeMode={changeMode}
+                    togglePlayList={togglePlayListDispatch}
                 >
                 </NormalPlayer>
             }
@@ -235,6 +239,7 @@ function Player(props) {
                 onEnded={handleAudioEnd}
                 onError={handleError}
             ></audio>
+            <PlayList></PlayList>
             <Toast
                 text={modeText}
                 ref={toastRef}

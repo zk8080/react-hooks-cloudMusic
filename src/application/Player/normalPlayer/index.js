@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:56:26
- * @LastEditTime : 2020-01-19 15:30:15
+ * @LastEditTime : 2020-02-03 11:23:16
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/normalPlayer/index.js
@@ -17,7 +17,7 @@ import { playMode } from '../../../api/config';
 function NormalPlayer(props) {
 
     const { song, fullScreen, playing, percent, duration, currentTime, mode } = props;
-    const { toggleFullScreen, clickPlaying, onProgressChange, handlePrev, handleNext, changeMode} = props;
+    const { toggleFullScreen, clickPlaying, onProgressChange, handlePrev, handleNext, changeMode, togglePlayList} = props;
 
     const normalPlayerRef = useRef();
     const cdWrapperRef = useRef();
@@ -106,6 +106,11 @@ function NormalPlayer(props) {
         }
         return content;
     }
+
+    const handleTogglePlayList = (e) => {
+        togglePlayList(true);
+        e.stopPropagation();
+    }
     return (
         <CSSTransition
             classNames="normal"
@@ -185,7 +190,7 @@ function NormalPlayer(props) {
                         <div className="icon i-right" onClick={handleNext}>
                             <i className="iconfont">&#xe718;</i>
                         </div>
-                        <div className="icon i-right">
+                        <div className="icon i-right" onClick={handleTogglePlayList}>
                             <i className="iconfont">&#xe640;</i>
                         </div>
                     </Operators>

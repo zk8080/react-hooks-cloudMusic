@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 17:48:52
- * @LastEditTime : 2020-01-07 20:25:43
+ * @LastEditTime : 2020-01-28 17:21:39
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/config.js
@@ -9,6 +9,7 @@
 import axios from 'axios';
 
 export const baseUrl = 'http://localhost:8000';
+// export const baseUrl = '/api';
 
 const axiosInstance = axios.create({
     baseURL: baseUrl
