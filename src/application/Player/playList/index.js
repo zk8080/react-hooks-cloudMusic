@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-02-03 11:07:40
- * @LastEditTime : 2020-02-06 11:29:56
+ * @LastEditTime : 2020-02-06 12:03:23
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/playList/index.js
@@ -9,7 +9,7 @@
 import React, { memo, useRef, useState, useCallback } from 'react';
 import { PlayListWrapper, ScrollWrapper, ListContent, ListHeader } from './style';
 import { connect } from 'react-redux';
-import { changeShowPlayList, changeCurrentIndex, changePlayMode, changePlayList } from '../store/actionCreators';
+import { changeShowPlayList, changeCurrentIndex, changePlayMode, changePlayList, deleteSong } from '../store/actionCreators';
 import { CSSTransition } from 'react-transition-group';
 import Scroll from '../../../baseUI/scroll';
 import { playMode } from "../../../api/config";
@@ -30,6 +30,7 @@ function PlayList(props) {
         changeCurrentIndexDispatch,
         changeModeDispatch,
         changePlayListDispatch,
+        deleteSongDispatch
     } = props;
 
     const playList = immutablePlayList.toJS();
@@ -64,6 +65,7 @@ function PlayList(props) {
         listWrapperRef.current.style["transform"] = `translate3d(0px, 100%, 0px)`;
     }, [])
 
+    // 渲染当前播放icon
     const getCurrentIcon = (item) => {
         // 是不是当前正在播放的歌曲
         const current = currentSong.id === item.id;
@@ -73,6 +75,7 @@ function PlayList(props) {
             <i className={`current iconfont ${className}`} dangerouslySetInnerHTML={{ __html: content }}></i>
         )
     };
+    // 渲染当前播放模式
     const getPlayMode = () => {
         let content, text;
         if (mode === playMode.sequence) {
@@ -97,6 +100,18 @@ function PlayList(props) {
         // 具体逻辑比较复杂 后面来实现
     };
 
+    // 切歌
+    const handleCurrentIndex = (index) => {
+        if(index === currentIndex) return;
+        changeCurrentIndexDispatch(index)
+    }
+
+    // 删除一首歌
+    const handleDeleteSong = (e, song) => {
+        e.stopPropagation();
+        deleteSongDispatch(song)
+    }
+
     return (
         <CSSTransition
             in={showPlayList}
@@ -112,7 +127,11 @@ function PlayList(props) {
                 style={isShow === true ? { display: "block" } : { display: "none" }}
                 onClick={() => togglePlayListDispatch(false)}
             >
-                <div className="list_wrapper" ref={listWrapperRef}>
+                <div 
+                    className="list_wrapper" 
+                    ref={listWrapperRef}
+                    onClick={ e => e.stopPropagation() }
+                >
                     <ListHeader>
                         <h1 className="title">
                             {getPlayMode()}
@@ -129,13 +148,13 @@ function PlayList(props) {
                                 {
                                     playList.map((item, index) => {
                                         return (
-                                            <li className="item" key={item.id}>
+                                            <li className="item" key={item.id} onClick={ () => handleCurrentIndex(index) }>
                                                 {getCurrentIcon(item)}
                                                 <span className="text">{item.name} - {getName(item.ar)}</span>
                                                 <span className="like">
                                                     <i className="iconfont">&#xe601;</i>
                                                 </span>
-                                                <span className="delete">
+                                                <span className="delete" onClick={ e => handleDeleteSong(e, item) }>
                                                     <i className="iconfont">&#xe63d;</i>
                                                 </span>
                                             </li>
@@ -185,9 +204,9 @@ const mapDispatchToProps = (dispatch) => {
         changePlayListDispatch(data) {
             dispatch(changePlayList(data));
         },
-        // deleteSongDispatch(data) {
-        //     dispatch(deleteSong(data));
-        // },
+        deleteSongDispatch(data) {
+            dispatch(deleteSong(data));
+        },
     }
 }
 

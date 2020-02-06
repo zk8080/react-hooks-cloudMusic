@@ -1,7 +1,7 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:16:07
- * @LastEditTime : 2020-01-07 20:31:06
+ * @LastEditTime : 2020-02-06 11:55:59
  * @LastEditors  : Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/store/actionCreators.js
@@ -46,5 +46,10 @@ export const changeCurrentIndex = (data) => ({
 
 export const changeShowPlayList = (data) => ({
     type: actionTypes.SET_SHOW_PLAYLIST,
+    data
+});
+
+export const deleteSong = (data) => ({
+    type: actionTypes.SET_DELETE_SONG,
     data
 });
