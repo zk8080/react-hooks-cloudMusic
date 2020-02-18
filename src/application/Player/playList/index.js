@@ -2,18 +2,27 @@
  * @Author: your name
  * @Date: 2020-02-03 11:07:40
  * @LastEditTime : 2020-02-06 12:03:23
- * @LastEditors  : Please set LastEditors
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/playList/index.js
  */
 import React, { memo, useRef, useState, useCallback } from 'react';
 import { PlayListWrapper, ScrollWrapper, ListContent, ListHeader } from './style';
 import { connect } from 'react-redux';
-import { changeShowPlayList, changeCurrentIndex, changePlayMode, changePlayList, deleteSong } from '../store/actionCreators';
+import { changeShowPlayList, 
+        changeCurrentIndex, 
+        changePlayMode, 
+        changePlayList, 
+        deleteSong,
+        changeSequecePlayList,
+        changePlayingState,
+        changeCurrentSong
+    } from '../store/actionCreators';
 import { CSSTransition } from 'react-transition-group';
 import Scroll from '../../../baseUI/scroll';
 import { playMode } from "../../../api/config";
 import { getName, shuffle, findIndex } from './../../../api/utils';
+import Confirm from '../../../baseUI/confirm';
 
 function PlayList(props) {
     const {
@@ -30,7 +39,8 @@ function PlayList(props) {
         changeCurrentIndexDispatch,
         changeModeDispatch,
         changePlayListDispatch,
-        deleteSongDispatch
+        deleteSongDispatch,
+        clearDispatch
     } = props;
 
     const playList = immutablePlayList.toJS();
@@ -40,6 +50,7 @@ function PlayList(props) {
     const playListRef = useRef();
     const listWrapperRef = useRef();
     const [isShow, setIsShow] = useState(false);
+    const confirmRef = useRef();
 
     const onEnterCB = useCallback(() => {
         // 让列表显示
@@ -97,7 +108,23 @@ function PlayList(props) {
     };
     const changeMode = (e) => {
         let newMode = (mode + 1) % 3;
-        // 具体逻辑比较复杂 后面来实现
+        if (newMode === 0) {
+            //顺序模式
+            changePlayListDispatch(sequencePlayList);
+            let index = findIndex(currentSong, sequencePlayList);
+            changeCurrentIndexDispatch(index);
+        } else if (newMode === 1) {
+            //单曲循环
+            // changePlayListDispatch(sequencePlayList);
+            changePlayListDispatch([currentSong]);
+        } else if (newMode === 2) {
+            //随机播放
+            let newList = shuffle(sequencePlayList);
+            let index = findIndex(currentSong, newList);
+            changePlayListDispatch(newList);
+            changeCurrentIndexDispatch(index);
+        }
+        changeModeDispatch(newMode);
     };
 
     // 切歌
@@ -110,6 +137,16 @@ function PlayList(props) {
     const handleDeleteSong = (e, song) => {
         e.stopPropagation();
         deleteSongDispatch(song)
+    }
+
+    // 点击删除全部图标
+    const handleShowClear = () => {
+        confirmRef.current.show();
+    }
+
+    // 删除全部歌曲
+    const handleConfirmClear = () => {
+        clearDispatch()
     }
 
     return (
@@ -135,7 +172,7 @@ function PlayList(props) {
                     <ListHeader>
                         <h1 className="title">
                             {getPlayMode()}
-                            <span className="iconfont clear">&#xe63d;</span>
+                            <span className="iconfont clear" onClick={handleShowClear}>&#xe63d;</span>
                         </h1>
                     </ListHeader>
                     <ScrollWrapper>
@@ -164,13 +201,13 @@ function PlayList(props) {
                             </ListContent>
                         </Scroll>
                     </ScrollWrapper>
-                    {/* <Confirm
+                    <Confirm
                         ref={confirmRef}
                         text={"是否删除全部?"}
                         cancelBtnText={"取消"}
                         confirmBtnText={"确定"}
                         handleConfirm={handleConfirmClear}
-                    /> */}
+                    />
                 </div>
             </PlayListWrapper>
         </CSSTransition>
@@ -207,6 +244,19 @@ const mapDispatchToProps = (dispatch) => {
         deleteSongDispatch(data) {
             dispatch(deleteSong(data));
         },
+        clearDispatch () {
+            // 1. 清空两个列表
+            dispatch (changePlayList([]));
+            dispatch (changeSequecePlayList([]));
+            // 2. 初始 currentIndex
+            dispatch (changeCurrentIndex(-1));
+            // 3. 关闭 PlayList 的显示
+            dispatch (changeShowPlayList(false));
+            // 4. 将当前歌曲置空
+            dispatch (changeCurrentSong({}));
+            // 5. 重置播放状态
+            dispatch (changePlayingState(false));
+        }
     }
 }
 
