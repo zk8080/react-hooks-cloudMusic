@@ -138,6 +138,38 @@ export const CDWrapper = styled.div`
   }
 `;
 
+export const LyricContainer = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  /* 遮罩 会有模糊效果，看个人喜欢*/
+  /* mask-image: -webkit-gradient(linear,left top,left bottom,color-stop(0,hsla(0,0%,100%,0)),color-stop(10%,hsla(0,0%,100%,.6)),color-stop(25%,#fff),color-stop(75%,#fff),color-stop(85%,hsla(0,0%,100%,.6)),to(hsla(0,0%,100%,0)));
+  mask-image: linear-gradient(linear,left top,left bottom,color-stop(0,hsla(0,0%,100%,0)),color-stop(10%,hsla(0,0%,100%,.6)),color-stop(25%,#fff),color-stop(75%,#fff),color-stop(85%,hsla(0,0%,100%,.6)),to(hsla(0,0%,100%,0))); */
+`;
+export const LyricWrapper = styled.div`
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+  p {
+    line-height: 32px;
+    color: rgba(255, 255, 255, 0.5);
+    white-space: normal;
+    font-size: ${style["font-size-l"]};
+    &.current {
+      color: #fff;
+    }
+    &.pure{
+      position: relative;
+      top: 30vh;
+    }
+  }
+`;
+
 export const Bottom = styled.div`
   position: absolute;
   bottom: 50px;

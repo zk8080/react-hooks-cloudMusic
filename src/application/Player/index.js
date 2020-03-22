@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:15:46
- * @LastEditTime : 2020-02-03 11:30:02
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-03-22 22:44:29
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/index.js
  */
@@ -13,8 +13,10 @@ import MiniPlayer from './miniPlayer';
 import NormalPlayer from './normalPlayer';
 import Toast from '../../baseUI/toast/index';
 import { getSongUrl, isEmptyObject, findIndex, shuffle } from '../../api/utils';
+import { getLyricRequest } from '../../api/request'
 import { playMode } from '../../api/config';
 import PlayList from './playList/index';
+import Lyric from '../../api/lyric-parser';
 
 function Player(props) {
 
@@ -43,6 +45,8 @@ function Player(props) {
 
     const audioRef = useRef();
     const toastRef = useRef();
+    // 歌词ref
+    const currentLyricRef = useRef();
 
     // 目前播放时间
     const [currentTime, setCurrentTime] = useState(0);
@@ -56,6 +60,12 @@ function Player(props) {
 
     // 歌曲缓存是否完成标识
     const [songReady, setSongReady] = useState(true);
+
+    // 当前实时歌词
+    const [ currentPlayingLyric, setCurrentPlayingLyric ] = useState("");
+
+    // 当前行数
+    const currentLineNum = useRef(0);
 
     // 播放进度
     const percent = isNaN(currentTime / duration) ? 0 : currentTime / duration;
@@ -89,6 +99,7 @@ function Player(props) {
             });
         })
         togglePlayingDispatch(true);
+        getLyric(curSong.id)
         setCurrentTime(0);//从头开始播放
         setDuration((curSong.dt / 1000) | 0);//时长
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -98,6 +109,9 @@ function Player(props) {
     const clickPlaying = (e, flag) => {
         e.stopPropagation();
         togglePlayingDispatch(flag);
+        if (currentLyricRef.current) {
+            currentLyricRef.current.togglePlay(currentTime*1000);
+        }
     }
 
     // 更新播放时间
@@ -112,6 +126,9 @@ function Player(props) {
         audioRef.current.currentTime = newTime;
         if (!playing) {
             togglePlayingDispatch(true);
+        }
+        if (currentLyricRef.current) {
+            currentLyricRef.current.togglePlay(newTime*1000);
         }
     };
 
@@ -194,10 +211,39 @@ function Player(props) {
             handleNext();
         }
     }
-
+    // 播放错误
     const handleError = () => {
         setSongReady(true)
         alert ("播放出错");
+    };
+
+    // 歌词解析的回调操作 实时获取歌词行数和当前歌词
+    const handleLyric = ({lineNum, txt}) => {
+        if (!currentLyricRef.current) return;
+        currentLineNum.current = lineNum;
+        setCurrentPlayingLyric(txt);
+    }
+
+    // 获取歌词
+    const getLyric = id => {
+        let lyric = "";
+        getLyricRequest(id)
+          .then (data => {
+            lyric = data.lrc.lyric;
+            if (!lyric) {
+              currentLyricRef.current = null;
+              return;
+            }
+            currentLyricRef.current = new Lyric(lyric, handleLyric);
+            // 调用歌词播放方法
+            currentLyricRef.current.play();
+            currentLineNum.current = 0;
+            currentLyricRef.current.seek(0);
+          })
+          .catch (() => {
+            songReady.current = true;
+            audioRef.current.play ();
+          });
     };
 
     return (
@@ -229,6 +275,9 @@ function Player(props) {
                     mode={mode}
                     changeMode={changeMode}
                     togglePlayList={togglePlayListDispatch}
+                    currentLyric={currentLyricRef.current}
+                    currentPlayingLyric={currentPlayingLyric}
+                    currentLineNum={currentLineNum.current}
                 >
                 </NormalPlayer>
             }
