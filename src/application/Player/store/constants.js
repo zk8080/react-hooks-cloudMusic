@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:16:13
- * @LastEditTime : 2020-02-06 11:54:09
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-04-07 16:36:10
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/store/constants.js
  */
@@ -15,3 +15,4 @@ export const SET_PLAY_MODE = 'player/SET_PLAY_MODE';
 export const SET_CURRENT_INDEX = 'player/SET_CURRENT_INDEX';
 export const SET_SHOW_PLAYLIST = 'player/SET_SHOW_PLAYLIST';
 export const SET_DELETE_SONG = 'player/SET_DELETE_SONG';
+export const INSERT_SONG = 'player/INSERT_SONG';

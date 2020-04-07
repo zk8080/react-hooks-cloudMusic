@@ -1,13 +1,14 @@
 /*
  * @Author: your name
  * @Date: 2020-01-07 20:16:07
- * @LastEditTime : 2020-02-06 11:55:59
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-04-07 16:35:56
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Player/store/actionCreators.js
  */
 import * as actionTypes from './constants';
 import { fromJS } from 'immutable';
+import { getSongDetailRequest } from '../../../api/request';
 
 export const changeCurrentSong = (data) => ({
     type: actionTypes.SET_CURRENT_SONG,
@@ -53,3 +54,18 @@ export const deleteSong = (data) => ({
     type: actionTypes.SET_DELETE_SONG,
     data
 });
+
+export const insertSong = (data) => ({
+    type: actionTypes.INSERT_SONG,
+    data
+});
+
+export const getSongDetail = (id) => {
+    return (dispatch) => {
+      getSongDetailRequest(id).then(data => {
+        let song = data.songs[0];
+        console.log(song);
+        dispatch(insertSong(song));
+      })
+    }
+  }

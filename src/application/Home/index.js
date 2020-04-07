@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:16:00
- * @LastEditTime : 2020-01-07 20:37:14
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-04-03 10:50:00
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/application/Home/index.js
  */
@@ -21,7 +21,7 @@ function Home(props) {
             <Top>
                 <span className='iconfont menu'>&#xe65c;</span>
                 <span className='title'>WebApp</span>
-                <span className='iconfont search'>&#xe62b;</span>
+                <span className='iconfont search' onClick={() => {props.history.push('/search')}} >&#xe62b;</span>
             </Top>
             <Tab>
                 <NavLink

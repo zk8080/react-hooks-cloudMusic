@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2019-12-25 10:14:34
- * @LastEditTime : 2020-01-19 14:48:02
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-04-03 11:11:34
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/api/utils.js
  */
@@ -74,3 +74,16 @@ export const findIndex = (song, list) => {
         return song.id === item.id;
     });
 };
+
+// 防抖
+export const debounce = (fn, time) => {
+    // 利用闭包缓存一个定时器
+    let timeout = null;
+    return function () {
+        // 每次执行 则先清除上一个定时器
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            fn.apply(this, arguments)
+        }, time);
+    }
+}

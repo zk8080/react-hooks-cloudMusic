@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2019-12-24 15:14:36
- * @LastEditTime : 2020-01-06 17:41:43
- * @LastEditors  : Please set LastEditors
+ * @LastEditTime: 2020-04-03 10:31:20
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /cloud-music/src/routes/index.js
  */
@@ -14,6 +14,7 @@ import Singers from '../application/Singers';
 import Rank from '../application/Rank';
 import Album from  '../application/Album';
 import Singer from '../application/Singer';
+import Search from '../application/Search';
 
 export default [
     {
@@ -54,6 +55,10 @@ export default [
                         component: Singer
                     }
                 ]
+            },
+            {
+                path: '/search',
+                component: Search,
             },
         ]
     }
